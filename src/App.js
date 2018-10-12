@@ -1,28 +1,46 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {connect} from 'react-redux';
+import { updateState } from './redux/actions';
+import { Card, Icon, Image } from 'semantic-ui-react'
 
 class App extends Component {
+  componentDidMount(){
+    this.props.updateState()
+  }
+
   render() {
+    console.log(this.props.articles, "<===")
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
+      {this.props.articles.map(article => {
+        return (
+          <Card>
+          <a href={article.url}>
+
+          <Image src={article.urlToImage} />
           </a>
-        </header>
+          <Card.Content>
+            <Card.Header>{article.title}</Card.Header>
+            <Card.Meta>
+              <span className='date'>Joined in 2015</span>
+            </Card.Meta>
+            <Card.Description>{article.content}</Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+          </Card.Content>
+        </Card>
+        )
+      })}
       </div>
     );
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    articles: state.articles
+  }
+}
+
+export default connect(mapStateToProps, {updateState})(App);
